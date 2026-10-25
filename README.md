@@ -1,2 +1,209 @@
+```markdown
 # OntoKG-Gate
-OntoKG-Gate is an evidence-gated framework for Alzheimer’s disease medical QA. It combines SPARQL-based AD knowledge graph retrieval, online ontology enrichment, OG-RAG hypergraph evidence, G-Retriever subgraphs, and permutation-debiased LLM answer scoring.
+
+OntoKG-Gate is an evidence-gated framework for Alzheimer’s disease medical multiple-choice question answering. It combines a disease-specific knowledge graph, semantic embeddings, online ontology enrichment, OG-RAG hypergraph retrieval, optional G-Retriever subgraph contextualization, and permutation-debiased LLM answer scoring.
+
+The framework uses direct AD-KG evidence as the primary context. Ontology, OG-RAG, and G-Retriever evidence are added only when a relevance gate determines that they provide useful supplementary information.
+
+---
+
+## 1. Main Components
+
+### 1.1 Direct AD-KG Retrieval
+
+The framework retrieves question-grounded evidence from the Alzheimer’s disease knowledge graph using:
+
+- question keyword extraction;
+- cosine similarity between question keywords and KG entities;
+- SPARQL path retrieval;
+- local neighbor exploration;
+- cross-encoder reranking;
+- maximal marginal relevance (MMR) for compact and non-redundant triples.
+
+The retrieved direct KG facts remain the primary evidence source.
+
+### 1.2 Online Ontology Enrichment
+
+The framework can query the EBI Ontology Lookup Service (OLS) to retrieve exact biomedical concept matches from ontologies such as:
+
+- MONDO;
+- DOID;
+- HPO;
+- EFO;
+- NCIT;
+- ChEBI.
+
+Ontology blocks may include preferred labels, definitions, synonyms, and optional direct hierarchical parents or children.
+
+### 1.3 OG-RAG Hypergraph Retrieval
+
+OG-RAG represents KG triples and ontology blocks as factual hyperedges. It retrieves query-relevant hypernodes using key and value similarity, then applies greedy hyperedge coverage to retain a compact set of relevant evidence blocks.
+
+### 1.4 Evidence Gating
+
+The evidence gate compares the relevance of direct KG evidence with supplementary OLS, OG-RAG, or G-Retriever evidence using a cross-encoder.
+
+Direct KG facts are preserved. Supplementary evidence is appended only when it satisfies the configured relevance criterion.
+
+### 1.5 G-Retriever Subgraph Contextualization
+
+G-Retriever extracts a compact subgraph from AD-KG using cosine-matched KG entity seeds and Prize-Collecting Steiner Tree (PCST) optimization.
+
+The selected triples can be transformed into a factual paragraph by a graph-to-text Llama-2 model. The final Llama-3 model receives this paragraph only when the evidence gate accepts it.
+
+### 1.6 Permutation-Debiased Answer Scoring
+
+The framework can cyclically permute answer options before scoring them with the final LLM. Scores are mapped back to the original options and averaged.
+
+This reduces answer-position bias, because each answer content appears in multiple letter positions.
+
+---
+
+## 2. Repository Structure
+
+```text
+OntoKG-Gate/
+│
+├── main.py
+│   Main evaluation and inference script.
+│
+├── knowledge-graph/
+│   └── alz.txt
+│       Alzheimer’s disease knowledge graph in TSV format.
+│       Each line follows: head <TAB> relation <TAB> tail.
+│
+├── kg-embedding/
+│   └── entity_embeddings.pkl
+│       Precomputed embeddings for AD-KG entities.
+│
+├── keyword-embeddings/
+│   └── keyword_embeddings.pkl
+│       Precomputed embeddings for biomedical keywords.
+│
+├── datasets/
+│   ├── medqa_filter.json
+│   ├── medmcqa_filter.json
+│   ├── mmlu_filter.json
+│   └── qa4mre_filter.json
+│
+└── results/
+    Output directory created during evaluation.
+```
+
+---
+
+## 3. Supported Datasets
+
+The framework supports four Alzheimer’s disease-related medical QA datasets:
+
+| Dataset | Input Format | Number of Options |
+|---|---|---:|
+| MedQA | Medical multiple-choice questions | 4 |
+| MedMCQA | Medical entrance examination questions | 4 |
+| MMLU-medical | Medical subsets of MMLU | 4 |
+| QA4MRE-AD | Alzheimer’s disease reading comprehension questions | 5 |
+
+The dataset labels are used only for final evaluation. They are never used during KG retrieval, ontology lookup, reranking, PCST selection, evidence gating, or prompt construction.
+
+---
+
+## 4. Installation
+
+Create and activate a Python environment:
+
+```bash
+python3 -m venv ontokg_env
+source ontokg_env/bin/activate
+```
+
+Install the required packages:
+
+```bash
+pip install torch transformers sentence-transformers rank-bm25 rdflib requests numpy
+```
+
+Optional packages:
+
+```bash
+pip install pcst-fast torch-geometric
+```
+
+`pcst-fast` enables the native PCST solver. If it is unavailable, the code uses a deterministic graph-selection fallback.
+
+`torch-geometric` is required only for the trained GNN version of G-Retriever.
+
+---
+
+## 5. Hugging Face Authentication
+
+For gated Hugging Face models, set your token as an environment variable:
+
+```bash
+export HF_TOKEN="your_hugging_face_token"
+```
+
+Do not store Hugging Face tokens directly inside `main.py`.
+
+---
+
+## 6. Basic Usage
+
+Display all available options:
+
+```bash
+python3 main.py --help
+```
+
+
+
+## 7. Output Files
+
+Each evaluation creates the following files:
+
+```text
+results/<experiment_name>/
+├── <dataset>_<split>_predictions.json
+├── <dataset>_<split>_summary.json
+└── ols_ontology_cache.json
+```
+
+The prediction file records:
+
+- question identifier;
+- predicted answer;
+- gold answer;
+- correctness;
+- score for each option letter;
+- SPARQL seed entities;
+- selected KG triples;
+- OLS blocks;
+- OG-RAG hyperedges;
+- gate decisions;
+- G-Retriever subgraph details;
+- few-shot demonstration identifiers.
+
+The summary file records accuracy, failures, configuration, and component-level diagnostics.
+
+---
+
+## 8. Reproducibility Protocol
+
+1. Select all hyperparameters on the development split.
+2. Freeze the selected configuration.
+3. Run the frozen configuration once on the test split.
+4. Report the exact command and saved summary file.
+5. Do not tune gating thresholds, retrieval depth, or permutation parameters after observing test results.
+
+---
+
+## 9. Security Note
+
+Never commit the following files or values:
+
+- Hugging Face access tokens;
+- API keys;
+- private dataset paths;
+- cached credentials.
+
+Use environment variables such as `HF_TOKEN` for secrets.
+```
