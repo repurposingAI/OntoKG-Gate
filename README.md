@@ -146,12 +146,12 @@ Do not store Hugging Face tokens directly inside `main.py`.
 
 ---
 
-## 6. Basic Usage
+## 6. Usage
 
-Display all available options:
+Here is the command I used to run the approach on the QA4MRE test dataset :
 
 ```bash
-python3 main.py --help
+python3 main.py --data-dir ./ --dataset qa4mre --split test --kg-context-mode sparql --sparql-entity-seeds 2 --sparql-min-similarity 0.45 --sparql-max-hops 3 --sparql-max-paths 4 --sparql-neighbor-limit 10 --sparql-neighbor-expand-k 3 --sparql-rerank-top-k 6 --sparql-mmr-lambda 0.75 --use-ograg --online-ontologies --ols-timeout 10 --ograg-force-kg --ograg-safe-fallback --ograg-abstain-without-kg --ograg-append-ontology-anchor --ontology-anchor-chars 120 --use-gretriever-gnn --gretriever-embedding-mode both --gretriever-gnn-checkpoint gnn_ckpt.pt --gretriever-device cpu --main-device cuda:0 --gretriever-entity-seeds 4 --gretriever-entity-min-similarity 0.45 --gretriever-topk-nodes 16 --gretriever-max-edges 4 --gretriever-chars 320 --gretriever-paragraph-chars 280 --gretriever-max-new-tokens 32 --gretriever-rerank-triples --gretriever-rerank-top-k 4 --gate-supplements --supplement-score-tolerance 0.10 --ols-supplement-tolerance -0.40 --gretriever-supplement-tolerance -0.15 --answer-mode perm_fusion --perm-k 4 --perm-evidence-weight 0.5 --output-dir results/test/qa4mre/full_gnn
 ```
 
 
