@@ -130,10 +130,6 @@ For gated Hugging Face models, set your token as an environment variable:
 export HF_TOKEN="your_hugging_face_token"
 ```
 
-Do not store Hugging Face tokens directly inside `main.py`.
-
----
-
 ## 6. Usage
 
 Here is the command I used to run the approach on the QA4MRE test dataset :
