@@ -1,0 +1,214 @@
+{
+  "config": {
+    "data_dir": ".",
+    "output_dir": "results/test/qa4mre/full",
+    "model_name": "meta-llama/Llama-3.1-8B-Instruct",
+    "main_device": "cuda:0",
+    "embed_model": "sentence-transformers/all-mpnet-base-v2",
+    "reranker_model": "cross-encoder/ms-marco-MiniLM-L-6-v2",
+    "seed": 42,
+    "max_input_tokens": 8192,
+    "retrieval_top_k": 3,
+    "retrieval_pool": 30,
+    "kg_top_k": 6,
+    "kg_context_mode": "sparql",
+    "sparql_entity_seeds": 2,
+    "sparql_min_similarity": 0.45,
+    "sparql_max_hops": 3,
+    "sparql_max_paths": 4,
+    "sparql_neighbor_limit": 10,
+    "sparql_neighbor_expand_k": 3,
+    "sparql_rerank_top_k": 6,
+    "sparql_mmr_lambda": 0.75,
+    "max_evidence_chars": 5000,
+    "use_kg": false,
+    "use_medquad": false,
+    "use_ograg": true,
+    "online_ontologies": true,
+    "ols_timeout": 10,
+    "ograg_force_kg": true,
+    "ograg_evidence_router": false,
+    "ograg_router_margin": 0.35,
+    "ograg_safe_fallback": true,
+    "ograg_abstain_without_kg": true,
+    "ograg_append_ontology_anchor": true,
+    "ograg_append_medquad_anchor": false,
+    "ontology_anchor_chars": 120,
+    "ograg_append_hyperedges": false,
+    "ograg_hyperedge_chars": 700,
+    "gate_supplements": true,
+    "gate_calibration": "dev_robust",
+    "gate_calibration_file": "results/dev_calibration/qa4mre/full/gate_calibration.json",
+    "gate_calibration_center": -2.2357499599456787,
+    "gate_calibration_scale": 1.7410680148601532,
+    "supplement_score_tolerance": 0.1,
+    "ols_supplement_tolerance": -0.4,
+    "gretriever_supplement_tolerance": -0.15,
+    "ols_seed_kg_entities": true,
+    "ols_fetch_neighbors": false,
+    "ols_neighbor_max": 2,
+    "use_gretriever": true,
+    "use_gretriever_gnn": false,
+    "gretriever_untrained_gnn": false,
+    "gretriever_gnn_checkpoint": null,
+    "gretriever_gnn_hidden_dim": 384,
+    "gretriever_gnn_heads": 4,
+    "gretriever_soft_tokens": 8,
+    "gretriever_embedding_mode": "llm",
+    "gretriever_model_name": "meta-llama/Llama-2-7b-chat-hf",
+    "gretriever_device": "cpu",
+    "gretriever_topk_nodes": 16,
+    "gretriever_topk_edges": 3,
+    "gretriever_entity_seeds": 4,
+    "gretriever_entity_min_similarity": 0.45,
+    "gretriever_max_new_tokens": 32,
+    "gretriever_max_triples": 30,
+    "gretriever_paragraph_chars": 280,
+    "gretriever_require_direct_kg": true,
+    "use_gretriever_subgraph": false,
+    "gretriever_max_nodes": 12,
+    "gretriever_max_edges": 4,
+    "gretriever_chars": 320,
+    "gretriever_rerank_triples": true,
+    "gretriever_rerank_top_k": 4,
+    "enable_web": false,
+    "min_reranker_score": 0.0,
+    "use_nli": true,
+    "nli_model": "facebook/bart-large-mnli",
+    "nli_contradiction_threshold": 0.8,
+    "dataset": "qa4mre",
+    "limit": null,
+    "split": "test",
+    "dev_fraction": 0.15,
+    "ablations": false,
+    "answer_mode": "perm_fusion",
+    "cot_max_new_tokens": 180,
+    "perm_k": 0,
+    "perm_evidence_weight": 0.5,
+    "perm_adaptive": false,
+    "perm_w_min": 0.25,
+    "perm_w_max": 0.75,
+    "use_passage": true,
+    "fewshot_k": 0,
+    "fewshot_pool_split": "dev",
+    "fewshot_pool_file": null,
+    "fewshot_strategy": "semantic",
+    "fewshot_max_chars": 1800,
+    "save_every": 1
+  },
+  "n": 35,
+  "accuracy": 0.8571428571428571,
+  "accuracy_wilson95": [
+    0.7062411969132573,
+    0.9373986119514649
+  ],
+  "failures": [],
+  "diagnostics": {
+    "kg_used": {
+      "n": 35,
+      "accuracy": 0.8571428571428571
+    },
+    "sparql_context_used": {
+      "n": 35,
+      "accuracy": 0.8571428571428571
+    },
+    "medquad_used": {
+      "n": 0,
+      "accuracy": null
+    },
+    "ograg_used": {
+      "n": 35,
+      "accuracy": 0.8571428571428571
+    },
+    "ols_used": {
+      "n": 31,
+      "accuracy": 0.8387096774193549
+    },
+    "ograg_kg_used": {
+      "n": 35,
+      "accuracy": 0.8571428571428571
+    },
+    "router_direct_kg": {
+      "n": 35,
+      "accuracy": 0.8571428571428571
+    },
+    "medquad_supplement_used": {
+      "n": 0,
+      "accuracy": null
+    },
+    "ols_supplement_used": {
+      "n": 7,
+      "accuracy": 0.5714285714285714
+    },
+    "ograg_hyperedges_appended": {
+      "n": 0,
+      "accuracy": null
+    },
+    "ols_neighbors_used": {
+      "n": 0,
+      "accuracy": null
+    },
+    "gretriever_subgraph_used": {
+      "n": 35,
+      "accuracy": 0.8571428571428571
+    },
+    "gretriever_llama2_used": {
+      "n": 10,
+      "accuracy": 0.8
+    },
+    "gretriever_gnn_used": {
+      "n": 0,
+      "accuracy": null
+    },
+    "fewshot_used": {
+      "n": 0,
+      "accuracy": null
+    },
+    "passage_used": {
+      "n": 35,
+      "accuracy": 0.8571428571428571
+    },
+    "fusion_changed_prediction": {
+      "n": 1,
+      "accuracy": 1.0
+    },
+    "nli_used": {
+      "n": 35,
+      "accuracy": 0.8571428571428571
+    },
+    "nli_conflict_detected": {
+      "n": 18,
+      "accuracy": 0.8888888888888888
+    },
+    "nli_conflict_auto_resolved": {
+      "n": 18,
+      "accuracy": 0.8888888888888888
+    }
+  },
+  "gate_calibration": {
+    "mode": "dev_robust",
+    "n_gate_decisions": 120,
+    "normalized_margin_quantiles": {
+      "0.0": -5.3982525859864445,
+      "0.25": -3.260541924096825,
+      "0.5": -0.831298120322921,
+      "0.75": 1.1662381639441948,
+      "1.0": 9.858747181284073
+    },
+    "threshold_sensitivity": {
+      "-0.5": {
+        "kept_rate": 0.475
+      },
+      "0.0": {
+        "kept_rate": 0.425
+      },
+      "0.5": {
+        "kept_rate": 0.3
+      },
+      "1.0": {
+        "kept_rate": 0.25
+      }
+    }
+  },
+  "warning": "This is a measured result for this exact split/configuration, not a guaranteed target."
+}
