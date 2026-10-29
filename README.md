@@ -109,13 +109,6 @@ The dataset labels are used only for final evaluation. They are never used durin
 
 ## 4. Installation
 
-Create and activate a Python environment:
-
-```bash
-python3 -m venv ontokg_env
-source ontokg_env/bin/activate
-```
-
 Install the required packages:
 
 ```bash
@@ -128,11 +121,6 @@ Optional packages:
 pip install pcst-fast torch-geometric
 ```
 
-`pcst-fast` enables the native PCST solver. If it is unavailable, the code uses a deterministic graph-selection fallback.
-
-`torch-geometric` is required only for the trained GNN version of G-Retriever.
-
----
 
 ## 5. Hugging Face Authentication
 
