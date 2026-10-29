@@ -185,25 +185,3 @@ The prediction file records:
 The summary file records accuracy, failures, configuration, and component-level diagnostics.
 
 ---
-
-## 8. Reproducibility Protocol
-
-1. Select all hyperparameters on the development split.
-2. Freeze the selected configuration.
-3. Run the frozen configuration once on the test split.
-4. Report the exact command and saved summary file.
-5. Do not tune gating thresholds, retrieval depth, or permutation parameters after observing test results.
-
----
-
-## 9. Security Note
-
-Never commit the following files or values:
-
-- Hugging Face access tokens;
-- API keys;
-- private dataset paths;
-- cached credentials.
-
-Use environment variables such as `HF_TOKEN` for secrets.
-```
